@@ -1121,32 +1121,56 @@ const RRegUniverse* getRRegUniverse_RISCV64(void)
    /* Add the registers that are available to the register allocator. */
    /* TODO */
    ru->allocable_start[HRcInt64] = ru->size;
-   ru->regs[ru->size++]          = hregRISCV64_x18();
-   ru->regs[ru->size++]          = hregRISCV64_x19();
-   ru->regs[ru->size++]          = hregRISCV64_x20();
-   ru->regs[ru->size++]          = hregRISCV64_x21();
-   ru->regs[ru->size++]          = hregRISCV64_x22();
-   ru->regs[ru->size++]          = hregRISCV64_x23();
-   ru->regs[ru->size++]          = hregRISCV64_x24();
-   ru->regs[ru->size++]          = hregRISCV64_x25();
-   ru->regs[ru->size++]          = hregRISCV64_x26();
-   ru->regs[ru->size++]          = hregRISCV64_x27();
-   ru->regs[ru->size++]          = hregRISCV64_x10();
-   ru->regs[ru->size++]          = hregRISCV64_x11();
-   ru->regs[ru->size++]          = hregRISCV64_x12();
-   ru->regs[ru->size++]          = hregRISCV64_x13();
-   ru->regs[ru->size++]          = hregRISCV64_x14();
-   ru->regs[ru->size++]          = hregRISCV64_x15();
-   ru->regs[ru->size++]          = hregRISCV64_x16();
-   ru->regs[ru->size++]          = hregRISCV64_x17();
+   ru->regs[ru->size++]          = hregRISCV64_x18(); /* s2 */
+   ru->regs[ru->size++]          = hregRISCV64_x19(); /* s3 */
+   ru->regs[ru->size++]          = hregRISCV64_x20(); /* s4 */
+   ru->regs[ru->size++]          = hregRISCV64_x21(); /* s5 */
+   ru->regs[ru->size++]          = hregRISCV64_x22(); /* s6 */
+   ru->regs[ru->size++]          = hregRISCV64_x23(); /* s7 */
+   ru->regs[ru->size++]          = hregRISCV64_x24(); /* s8 */
+   ru->regs[ru->size++]          = hregRISCV64_x25(); /* s9 */
+   ru->regs[ru->size++]          = hregRISCV64_x26(); /* s10 */
+   ru->regs[ru->size++]          = hregRISCV64_x27(); /* s11 */
+   ru->regs[ru->size++]          = hregRISCV64_x10(); /* a0 */
+   ru->regs[ru->size++]          = hregRISCV64_x11(); /* a1 */
+   ru->regs[ru->size++]          = hregRISCV64_x12(); /* a2 */
+   ru->regs[ru->size++]          = hregRISCV64_x13(); /* a3 */
+   ru->regs[ru->size++]          = hregRISCV64_x14(); /* a4 */
+   ru->regs[ru->size++]          = hregRISCV64_x15(); /* a5 */
+   ru->regs[ru->size++]          = hregRISCV64_x16(); /* a6 */
+   ru->regs[ru->size++]          = hregRISCV64_x17(); /* a7 */
    ru->allocable_end[HRcInt64]   = ru->size - 1;
+
+   /* Floating-point registers, all of which are caller-saved. */
+   ru->allocable_start[HRcFlt64] = ru->size;
+   ru->regs[ru->size++]          = hregRISCV64_f0();  /* ft0 */
+   ru->regs[ru->size++]          = hregRISCV64_f1();  /* ft1 */
+   ru->regs[ru->size++]          = hregRISCV64_f2();  /* ft2 */
+   ru->regs[ru->size++]          = hregRISCV64_f3();  /* ft3 */
+   ru->regs[ru->size++]          = hregRISCV64_f4();  /* ft4 */
+   ru->regs[ru->size++]          = hregRISCV64_f5();  /* ft5 */
+   ru->regs[ru->size++]          = hregRISCV64_f6();  /* ft6 */
+   ru->regs[ru->size++]          = hregRISCV64_f7();  /* ft7 */
+   ru->regs[ru->size++]          = hregRISCV64_f10(); /* fa0 */
+   ru->regs[ru->size++]          = hregRISCV64_f11(); /* fa1 */
+   ru->regs[ru->size++]          = hregRISCV64_f12(); /* fa2 */
+   ru->regs[ru->size++]          = hregRISCV64_f13(); /* fa3 */
+   ru->regs[ru->size++]          = hregRISCV64_f14(); /* fa4 */
+   ru->regs[ru->size++]          = hregRISCV64_f15(); /* fa5 */
+   ru->regs[ru->size++]          = hregRISCV64_f16(); /* fa6 */
+   ru->regs[ru->size++]          = hregRISCV64_f17(); /* fa7 */
+   ru->regs[ru->size++]          = hregRISCV64_f28(); /* ft8 */
+   ru->regs[ru->size++]          = hregRISCV64_f29(); /* ft9 */
+   ru->regs[ru->size++]          = hregRISCV64_f30(); /* ft10 */
+   ru->regs[ru->size++]          = hregRISCV64_f31(); /* ft11 */
+   ru->allocable_end[HRcFlt64]   = ru->size - 1;
    ru->allocable                 = ru->size;
 
    /* Add the registers that are not available for allocation. */
    /* TODO */
-   ru->regs[ru->size++] = hregRISCV64_x0();
-   ru->regs[ru->size++] = hregRISCV64_x2();
-   ru->regs[ru->size++] = hregRISCV64_x8();
+   ru->regs[ru->size++] = hregRISCV64_x0(); /* zero */
+   ru->regs[ru->size++] = hregRISCV64_x2(); /* sp */
+   ru->regs[ru->size++] = hregRISCV64_x8(); /* s0 */
 
    initialised = True;
 
@@ -1405,6 +1429,26 @@ void getRegUsage_RISCV64Instr(HRegUsage* u, const RISCV64Instr* i, Bool mode64)
       addHRegUse(u, HRmWrite, hregRISCV64_x15());
       addHRegUse(u, HRmWrite, hregRISCV64_x16());
       addHRegUse(u, HRmWrite, hregRISCV64_x17());
+      addHRegUse(u, HRmWrite, hregRISCV64_f0());
+      addHRegUse(u, HRmWrite, hregRISCV64_f1());
+      addHRegUse(u, HRmWrite, hregRISCV64_f2());
+      addHRegUse(u, HRmWrite, hregRISCV64_f3());
+      addHRegUse(u, HRmWrite, hregRISCV64_f4());
+      addHRegUse(u, HRmWrite, hregRISCV64_f5());
+      addHRegUse(u, HRmWrite, hregRISCV64_f6());
+      addHRegUse(u, HRmWrite, hregRISCV64_f7());
+      addHRegUse(u, HRmWrite, hregRISCV64_f10());
+      addHRegUse(u, HRmWrite, hregRISCV64_f11());
+      addHRegUse(u, HRmWrite, hregRISCV64_f12());
+      addHRegUse(u, HRmWrite, hregRISCV64_f13());
+      addHRegUse(u, HRmWrite, hregRISCV64_f14());
+      addHRegUse(u, HRmWrite, hregRISCV64_f15());
+      addHRegUse(u, HRmWrite, hregRISCV64_f16());
+      addHRegUse(u, HRmWrite, hregRISCV64_f17());
+      addHRegUse(u, HRmWrite, hregRISCV64_f28());
+      addHRegUse(u, HRmWrite, hregRISCV64_f29());
+      addHRegUse(u, HRmWrite, hregRISCV64_f30());
+      addHRegUse(u, HRmWrite, hregRISCV64_f31());
       /* Now we have to state any parameter-carrying registers which might be
          read. This depends on nArgRegs. */
       switch (i->RISCV64in.Call.nArgRegs) {
